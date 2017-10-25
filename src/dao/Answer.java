@@ -2,6 +2,7 @@ package dao;
 
 public class Answer {
 	private int id;
+	private int qid;
 	private double targetResult;
 	private double predictedResult;
 	private int fold;
