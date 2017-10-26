@@ -1,9 +1,11 @@
 package util;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Map;
 
 import dao.Answer;
+import dao.Question;
 
 public class FileParserContext {
 	private FileParserStrategy strategy;
@@ -13,7 +15,7 @@ public class FileParserContext {
         strategy = fileParserStrategy;
     }
 	
-	public Map<Integer, Answer>  parse() throws FileNotFoundException
+	public HashMap<Integer, Question>  parse() throws FileNotFoundException
 	{
 		return strategy.parse();
 	}

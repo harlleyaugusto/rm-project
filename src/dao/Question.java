@@ -4,14 +4,12 @@ import java.util.Map;
 public class Question {
 
 	private int id;
-	private Map<Integer, Answer> answers = new HashMap<Integer, Answer>();
-	private int fold;
+	private HashMap<Integer, Answer> answers;// = new HashMap<Integer, Answer>();
 	
-	public Question(int id, Map<Integer, Answer> answers, int fold) {
+	public Question(int id) {
 		super();
 		this.id = id;
-		this.answers = answers;
-		this.fold = fold;
+		answers =  new HashMap<Integer, Answer>();
 	}
 	
 	/**
@@ -41,24 +39,18 @@ public class Question {
 	/**
 	 * @param answers the answers to set
 	 */
-	public void setAnswers(Map<Integer, Answer> answers) {
+	public void setAnswers(HashMap<Integer, Answer> answers) {
 		this.answers = answers;
 	}
-
-
-	/**
-	 * @return the fold
-	 */
-	public int getFold() {
-		return fold;
+	
+	public Answer getAnswer(int aid)
+	{
+		return answers.get(aid);
 	}
 
-
-	/**
-	 * @param fold the fold to set
-	 */
-	public void setFold(int fold) {
-		this.fold = fold;
+	public void setAnswer(Answer ans){
+		answers.put(ans.getId(), ans);
 	}
+
 
 }

@@ -1,17 +1,20 @@
 package dao;
 
+import java.util.HashMap;
+
 public class Answer {
 	private int id;
 	private int qid;
 	private double targetResult;
-	private double predictedResult;
+	private double predictedResultGlobal;
+	HashMap<String, Double> predictedView = new HashMap<String, Double>();
 	private int fold;
 	
-	public Answer(int id, double targetResult, double predictedResult, int fold) {
+	public Answer(int id, double targetResult, int fold, HashMap<String, Double> predictedView) {
 		super();
 		this.id = id;
 		this.targetResult = targetResult;
-		this.predictedResult = predictedResult;
+		this.predictedView = predictedView;
 		this.fold = fold;
 	}
 	/**
@@ -42,13 +45,13 @@ public class Answer {
 	 * @return the predictedResult
 	 */
 	public double getPredictedResult() {
-		return predictedResult;
+		return predictedResultGlobal;
 	}
 	/**
 	 * @param predictedResult the predictedResult to set
 	 */
 	public void setPredictedResult(double predictedResult) {
-		this.predictedResult = predictedResult;
+		this.predictedResultGlobal = predictedResult;
 	}
 	/**
 	 * @return the fold
@@ -63,4 +66,8 @@ public class Answer {
 		this.fold = fold;
 	}
 	
+	public void setPredictedView(String view, double score)
+	{
+		predictedView.put(view, score);
+	}
 }
