@@ -52,5 +52,13 @@ public class Question {
 		answers.put(ans.getId(), ans);
 	}
 
-
+	public int getSizePredictedView(){
+		int total = 0;
+		for (int aid : answers.keySet())
+		{
+			total+= answers.get(aid).getSizePredictedView();
+		}
+		
+		return total;
+	}
 }

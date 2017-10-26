@@ -70,4 +70,8 @@ public class Answer {
 	{
 		predictedView.put(view, score);
 	}
+	
+	public int getSizePredictedView(){
+		return predictedView.size();
+	}
 }
