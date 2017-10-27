@@ -70,7 +70,7 @@ public class DataReaderFromView implements FileParserStrategy {
 					predictedView.put(view, predictedViewScore);
 					targetResult = Double.parseDouble(splits[4]);
 
-					ans = new Answer(aid, targetResult, fold, predictedView);
+					ans = new Answer(aid, qid, targetResult, fold, predictedView);
 
 					if (!questions.containsKey(qid)) {
 
@@ -84,7 +84,7 @@ public class DataReaderFromView implements FileParserStrategy {
 							questions.get(qid).setAnswer(ans);
 						}
 					}
-					System.out.println("id: " + aid + " targetResult: " + targetResult + " qid: " + qid);
+					//System.out.println("id: " + aid + " targetResult: " + targetResult + " qid: " + qid);
 
 				}
 			} finally {
@@ -106,15 +106,18 @@ public class DataReaderFromView implements FileParserStrategy {
 		files.add("stack_multiview_relevance_results_stack.txt");
 		files.add("stack_multiview_read_results_stack.txt");
 		files.add("stack_multiview_length_results_stack.txt");
+		files.add("stack_multiview_history_results_stack.txt");
 
 		DataReaderFromView data = new DataReaderFromView(
 				"/home/harlley/Projects/rm-project/data/experiments_results_qa/", files);
 		HashMap<Integer, Question> questions = data.parse();
 		int totalAns = 0;
 
-		for (int id : questions.keySet()) {
-			totalAns +=questions.get(id).getSizePredictedView();
-		}
+		Answer ans = Question.getAnswer(questions, 3129290);
+		
+		for (String view : ans.getPredictedView().keySet())
+			System.out.println("Question: " + ans.getQid() + " Fold: "+ ans.getFold() + " targetResult: " + ans.getTargetResult() +" View: " + view + " score: " + ans.getPredictedView().get(view));
+		
 		System.out.println("total: " + totalAns);
 
 	}

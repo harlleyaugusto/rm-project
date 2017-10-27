@@ -8,14 +8,52 @@ public class Answer {
 	private double targetResult;
 	private double predictedResultGlobal;
 	HashMap<String, Double> predictedView = new HashMap<String, Double>();
+	/**
+	 * @return the qid
+	 */
+	public int getQid() {
+		return qid;
+	}
+	/**
+	 * @param qid the qid to set
+	 */
+	public void setQid(int qid) {
+		this.qid = qid;
+	}
+	/**
+	 * @return the predictedResultGlobal
+	 */
+	public double getPredictedResultGlobal() {
+		return predictedResultGlobal;
+	}
+	/**
+	 * @param predictedResultGlobal the predictedResultGlobal to set
+	 */
+	public void setPredictedResultGlobal(double predictedResultGlobal) {
+		this.predictedResultGlobal = predictedResultGlobal;
+	}
+	/**
+	 * @return the predictedView
+	 */
+	public HashMap<String, Double> getPredictedView() {
+		return predictedView;
+	}
+	/**
+	 * @param predictedView the predictedView to set
+	 */
+	public void setPredictedView(HashMap<String, Double> predictedView) {
+		this.predictedView = predictedView;
+	}
+
 	private int fold;
 	
-	public Answer(int id, double targetResult, int fold, HashMap<String, Double> predictedView) {
+	public Answer(int id, int qid,double targetResult, int fold, HashMap<String, Double> predictedView) {
 		super();
 		this.id = id;
 		this.targetResult = targetResult;
 		this.predictedView = predictedView;
 		this.fold = fold;
+		this.qid = qid;
 	}
 	/**
 	 * @return the id
