@@ -5,4 +5,4 @@
  * @author harlley
  *
  */
-package util;
+package ufmg.dcc.rm.util;

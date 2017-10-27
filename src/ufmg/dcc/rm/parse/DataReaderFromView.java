@@ -1,28 +1,20 @@
-package util;
+package ufmg.dcc.rm.parse;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Scanner;
 
-import dao.Answer;
-import dao.Question;
+import ufmg.dcc.rm.multiview.Answer;
+import ufmg.dcc.rm.multiview.Question;
 
 public class DataReaderFromView implements FileParserStrategy {
 
 	private String path;
-	private String fileName;
 	ArrayList<String> files;
 
-	public DataReaderFromView(String path, String fileName) {
-		super();
-		this.path = path;
-		this.fileName = fileName;
-
-	}
 
 	public DataReaderFromView(String path, ArrayList<String> files) {
 		super();

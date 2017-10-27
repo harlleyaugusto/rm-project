@@ -5,4 +5,4 @@
  * @author harlley
  *
  */
-package dao;
+package ufmg.dcc.rm.ranking;

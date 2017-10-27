@@ -1,13 +1,14 @@
-package util;
+package ufmg.dcc.rm.parse;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import dao.Answer;
-import dao.Question;
+import ufmg.dcc.rm.multiview.Answer;
+import ufmg.dcc.rm.multiview.Question;
 
 public class FileParserContext {
+	
 	private FileParserStrategy strategy;
 	
 	public FileParserContext(FileParserStrategy fileParserStrategy)

@@ -1,4 +1,4 @@
-package dao;
+package ufmg.dcc.rm.multiview;
 
 import java.util.HashMap;
 

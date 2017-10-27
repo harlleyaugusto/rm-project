@@ -5,4 +5,4 @@
  * @author harlley
  *
  */
-package ranking;
+package ufmg.dcc.rm.parse;
