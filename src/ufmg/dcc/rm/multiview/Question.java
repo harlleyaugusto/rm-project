@@ -2,7 +2,6 @@ package ufmg.dcc.rm.multiview;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import ufmg.dcc.rm.util.SortHashMapByValues;
 
@@ -12,7 +11,18 @@ public class Question {
 	private HashMap<Integer, Answer> answers;
 
 	private HashMap<String, HashMap<Integer, Double>> rankingPerView;
+	private HashMap<Integer, Double> rankingTarget;
 
+
+	public Question(int id, Answer ans) {
+		super();
+		this.id = id;
+		answers = new HashMap<Integer, Answer>();
+		rankingPerView =  new HashMap<String, HashMap<Integer, Double>>();
+		setAnswer(ans);
+	}
+	
+	
 	/**
 	 * @return the rankingView
 	 */
@@ -41,16 +51,6 @@ public class Question {
 	 */
 	public void setRankingTarget(HashMap<Integer, Double> rankingTarget) {
 		this.rankingTarget = rankingTarget;
-	}
-
-	private HashMap<Integer, Double> rankingTarget;
-
-	public Question(int id, Answer ans) {
-		super();
-		this.id = id;
-		answers = new HashMap<Integer, Answer>();
-		rankingPerView =  new HashMap<String, HashMap<Integer, Double>>();
-		setAnswer(ans);
 	}
 
 	/**
@@ -90,14 +90,6 @@ public class Question {
 			return null;
 	}
 
-	public static Answer getAnswer(HashMap<Integer, Question> qs, int aid) {
-		for (int qid : qs.keySet())
-			if (qs.get(qid).getAnswers().containsKey(aid))
-				return qs.get(qid).getAnswers().get(aid);
-
-		return null;
-	}
-
 	public void setAnswer(Answer ans) {
 		answers.put(ans.getId(), ans);
 	}
@@ -111,14 +103,14 @@ public class Question {
 		return total;
 	}
 
-	public  void sortingPerView() {
+	public  void sortingAnswerPerView() {
 		for(String view : rankingPerView.keySet())
 		{
 			rankingPerView.put(view, (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(rankingPerView.get(view)));
 			
 		}
 		
-		for(String view : rankingPerView.keySet())
+		/*for(String view : rankingPerView.keySet())
 		{
 			System.out.print(view + " ");
 			for(Integer aid : rankingPerView.get(view).keySet())
@@ -126,7 +118,7 @@ public class Question {
 				System.out.print(aid + ":" + rankingPerView.get(view).get(aid) + " ");
 			}
 			System.out.println();
-		}
+		}*/
 		
 		/*Entry<Integer, Answer> entry = answers.entrySet().iterator().next();
 		Answer ans = entry.getValue();
@@ -150,6 +142,12 @@ public class Question {
 		}
 
 		return ranking;*/
+	}
+	
+	public static void sortingAllAnswer(HashMap<Integer, Question> questions)
+	{
+		for(Integer qid : questions.keySet()) 
+			questions.get(qid).sortingAnswerPerView();
 	}
 
 	public void setPredictedPerViewForEachAnswer(String view, int aid, double score) {
@@ -177,5 +175,13 @@ public class Question {
 		}
 
 		return rankingTarget;
+	}
+	
+	public static Answer getAnswer(HashMap<Integer, Question> qs, int aid) {
+		for (int qid : qs.keySet())
+			if (qs.get(qid).getAnswers().containsKey(aid))
+				return qs.get(qid).getAnswers().get(aid);
+
+		return null;
 	}
 }

@@ -6,8 +6,21 @@ public class Answer {
 	private int id;
 	private int qid;
 	private double targetResult;
-	private double predictedResultGlobal;
-	HashMap<String, Double> predictedView = new HashMap<String, Double>();
+	private double globalPrediction;
+	HashMap<String, Double> predictionView;// = new HashMap<String, Double>();
+	private int fold;
+	
+	
+	public Answer(int id, int qid,double targetResult, int fold, HashMap<String, Double> predictedView) {
+		super();
+		predictedView = new HashMap<String, Double>();
+		this.id = id;
+		this.targetResult = targetResult;
+		this.predictionView = predictedView;
+		this.fold = fold;
+		this.qid = qid;
+	}
+	
 	/**
 	 * @return the qid
 	 */
@@ -24,37 +37,28 @@ public class Answer {
 	 * @return the predictedResultGlobal
 	 */
 	public double getPredictedResultGlobal() {
-		return predictedResultGlobal;
+		return globalPrediction;
 	}
 	/**
 	 * @param predictedResultGlobal the predictedResultGlobal to set
 	 */
 	public void setPredictedResultGlobal(double predictedResultGlobal) {
-		this.predictedResultGlobal = predictedResultGlobal;
+		this.globalPrediction = predictedResultGlobal;
 	}
 	/**
 	 * @return the predictedView
 	 */
 	public HashMap<String, Double> getPredictedView() {
-		return predictedView;
+		return predictionView;
 	}
 	/**
 	 * @param predictedView the predictedView to set
 	 */
 	public void setPredictedView(HashMap<String, Double> predictedView) {
-		this.predictedView = predictedView;
+		this.predictionView = predictedView;
 	}
 
-	private int fold;
-	
-	public Answer(int id, int qid,double targetResult, int fold, HashMap<String, Double> predictedView) {
-		super();
-		this.id = id;
-		this.targetResult = targetResult;
-		this.predictedView = predictedView;
-		this.fold = fold;
-		this.qid = qid;
-	}
+
 	/**
 	 * @return the id
 	 */
@@ -83,13 +87,13 @@ public class Answer {
 	 * @return the predictedResult
 	 */
 	public double getPredictedResult() {
-		return predictedResultGlobal;
+		return globalPrediction;
 	}
 	/**
 	 * @param predictedResult the predictedResult to set
 	 */
 	public void setPredictedResult(double predictedResult) {
-		this.predictedResultGlobal = predictedResult;
+		this.globalPrediction = predictedResult;
 	}
 	/**
 	 * @return the fold
@@ -106,10 +110,10 @@ public class Answer {
 	
 	public void setPredictedView(String view, double score)
 	{
-		predictedView.put(view, score);
+		predictionView.put(view, score);
 	}
 	
 	public int getSizePredictedView(){
-		return predictedView.size();
+		return predictionView.size();
 	}
 }

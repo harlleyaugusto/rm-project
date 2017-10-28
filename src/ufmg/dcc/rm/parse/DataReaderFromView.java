@@ -34,7 +34,7 @@ public class DataReaderFromView implements FileParserStrategy {
 		double predictedViewScore;
 		HashMap<Integer, Question> questions = new HashMap<Integer, Question>();
 		String q = null;
-		HashMap<String, Double> predictedView;
+		HashMap<String, Double> predictionView;
 
 		for (int i = 0; i < files.size(); i++) {
 
@@ -56,11 +56,11 @@ public class DataReaderFromView implements FileParserStrategy {
 
 					predictedViewScore = Double.parseDouble(splits[3]);
 
-					predictedView = new HashMap<String, Double>();
-					predictedView.put(view, predictedViewScore);
+					predictionView = new HashMap<String, Double>();
+					predictionView.put(view, predictedViewScore);
 					targetResult = Double.parseDouble(splits[4]);
 
-					ans = new Answer(aid, qid, targetResult, fold, predictedView);
+					ans = new Answer(aid, qid, targetResult, fold, predictionView);
 
 					if (!questions.containsKey(qid)) {	
 						Question quest = new Question(qid, ans);
@@ -75,8 +75,6 @@ public class DataReaderFromView implements FileParserStrategy {
 							questions.get(qid).setPredictedPerViewForEachAnswer(view, aid, predictedViewScore);
 						}
 					}
-					//System.out.println("id: " + aid + " targetResult: " + targetResult + " qid: " + qid);
-
 				}
 			} finally {
 				scanner.close();
