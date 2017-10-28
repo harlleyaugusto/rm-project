@@ -9,16 +9,48 @@ import ufmg.dcc.rm.util.SortHashMapByValues;
 public class Question {
 
 	private int id;
-	private HashMap<Integer, Answer> answers;// = new HashMap<Integer,
-												// Answer>();
+	private HashMap<Integer, Answer> answers;
 
-	private HashMap<String, HashMap<Integer, Double>> rankingView;
+	private HashMap<String, HashMap<Integer, Double>> rankingPerView;
+
+	/**
+	 * @return the rankingView
+	 */
+	public HashMap<String, HashMap<Integer, Double>> getRankingView() {
+		return rankingPerView;
+	}
+
+	/**
+	 * @param rankingView
+	 *            the rankingView to set
+	 */
+	public void setRankingView(HashMap<String, HashMap<Integer, Double>> rankingView) {
+		this.rankingPerView = rankingView;
+	}
+
+	/**
+	 * @return the rankingTarget
+	 */
+	public HashMap<Integer, Double> getRankingTarget() {
+		return rankingTarget;
+	}
+
+	/**
+	 * @param rankingTarget
+	 *            the rankingTarget to set
+	 */
+	public void setRankingTarget(HashMap<Integer, Double> rankingTarget) {
+		this.rankingTarget = rankingTarget;
+	}
+
 	private HashMap<Integer, Double> rankingTarget;
 
-	public Question(int id) {
+	public Question(int id, Answer ans) {
 		super();
 		this.id = id;
 		answers = new HashMap<Integer, Answer>();
+		rankingPerView =  new HashMap<String, HashMap<Integer, Double>>();
+		setAnswer(ans);
 	}
 
 	/**
@@ -79,12 +111,28 @@ public class Question {
 		return total;
 	}
 
-	public HashMap<Integer, Double> rankingPerView() {
-		Entry<Integer, Answer> entry = answers.entrySet().iterator().next();
+	public  void sortingPerView() {
+		for(String view : rankingPerView.keySet())
+		{
+			rankingPerView.put(view, (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(rankingPerView.get(view)));
+			
+		}
+		
+		for(String view : rankingPerView.keySet())
+		{
+			System.out.print(view + " ");
+			for(Integer aid : rankingPerView.get(view).keySet())
+			{
+				System.out.print(aid + ":" + rankingPerView.get(view).get(aid) + " ");
+			}
+			System.out.println();
+		}
+		
+		/*Entry<Integer, Answer> entry = answers.entrySet().iterator().next();
 		Answer ans = entry.getValue();
 		HashMap<Integer, Double> ranking = new HashMap<Integer, Double>();
 
-		rankingView = new HashMap<String, HashMap<Integer, Double>>();
+		rankingPerView = new HashMap<String, HashMap<Integer, Double>>();
 
 		for (String view : ans.getPredictedView().keySet()) {
 			for (Integer ansEachView : answers.keySet()) {
@@ -93,33 +141,41 @@ public class Question {
 
 			ranking = (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(ranking);
 
-			rankingView.put(view, ranking);
-			
+			rankingPerView.put(view, ranking);
+
 			System.out.print(view + " ");
 			for (Integer aid : ranking.keySet())
 				System.out.print(aid + ":" + ranking.get(aid) + " ");
 			System.out.println();
 		}
 
-		return ranking;
+		return ranking;*/
+	}
+
+	public void setPredictedPerViewForEachAnswer(String view, int aid, double score) {
+		if (!rankingPerView.containsKey(view)) {
+			HashMap<Integer, Double> ranking = new HashMap<Integer, Double>();
+			ranking.put(aid, score);
+			rankingPerView.put(view, ranking);
+		} else {
+			rankingPerView.get(view).put(aid, score);
+		}
 	}
 
 	public HashMap<Integer, Double> rankingByTarget() {
 
 		rankingTarget = new HashMap<Integer, Double>();
 
-		for(Integer aid : answers.keySet())
-		{
+		for (Integer aid : answers.keySet()) {
 			rankingTarget.put(aid, answers.get(aid).getTargetResult());
 		}
-		
+
 		rankingTarget = (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(rankingTarget);
-		
-		for(Integer aid : rankingTarget.keySet())
-		{
+
+		for (Integer aid : rankingTarget.keySet()) {
 			System.out.print(aid + ":" + rankingTarget.get(aid) + " ");
 		}
-		
+
 		return rankingTarget;
 	}
 }

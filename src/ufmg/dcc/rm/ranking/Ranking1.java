@@ -41,7 +41,7 @@ public class Ranking1 {
 
 		System.out.println("Questions size:" + questions.size());
 		
-		questions.get(458721).rankingPerView();
+		questions.get(458721).sortingPerView();
 		questions.get(458721).rankingByTarget();
 
 		/*Process shell = null;

@@ -30,9 +30,7 @@ public class DataReaderFromView implements FileParserStrategy {
 		Scanner scanner = null;
 		double targetResult;
 		Answer ans;
-		int qid;
-		int aid;
-		int fold;
+		int qid, aid, fold;
 		double predictedViewScore;
 		HashMap<Integer, Question> questions = new HashMap<Integer, Question>();
 		String q = null;
@@ -64,16 +62,17 @@ public class DataReaderFromView implements FileParserStrategy {
 
 					ans = new Answer(aid, qid, targetResult, fold, predictedView);
 
-					if (!questions.containsKey(qid)) {
-
-						questions.put(qid, new Question(qid));
-						questions.get(qid).setAnswer(ans);
+					if (!questions.containsKey(qid)) {	
+						Question quest = new Question(qid, ans);
+						questions.put(qid, quest);
 
 					} else {
 						if (questions.get(qid).getAnswers().containsKey(aid)) {
 							questions.get(qid).getAnswer(aid).setPredictedView(view, predictedViewScore);
+							questions.get(qid).setPredictedPerViewForEachAnswer(view, aid, predictedViewScore);
 						} else {
 							questions.get(qid).setAnswer(ans);
+							questions.get(qid).setPredictedPerViewForEachAnswer(view, aid, predictedViewScore);
 						}
 					}
 					//System.out.println("id: " + aid + " targetResult: " + targetResult + " qid: " + qid);
