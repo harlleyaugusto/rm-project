@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import ufmg.dcc.rm.multiview.Answer;
-import ufmg.dcc.rm.multiview.Question;
+import ufmg.dcc.rm.qa.Answer;
+import ufmg.dcc.rm.qa.Question;
 
 public class FileParserContext {
 	

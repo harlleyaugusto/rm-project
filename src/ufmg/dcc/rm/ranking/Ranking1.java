@@ -1,7 +1,7 @@
 package ufmg.dcc.rm.ranking;
 
-import ufmg.dcc.rm.multiview.*;
 import ufmg.dcc.rm.parse.*;
+import ufmg.dcc.rm.qa.*;
 import ufmg.dcc.rm.util.SortHashMapByValues;
 
 import java.io.BufferedReader;

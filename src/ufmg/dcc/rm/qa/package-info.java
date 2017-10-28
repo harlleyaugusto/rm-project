@@ -5,4 +5,4 @@
  * @author harlley
  *
  */
-package ufmg.dcc.rm.multiview;
+package ufmg.dcc.rm.qa;

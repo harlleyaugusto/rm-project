@@ -1,4 +1,4 @@
-package ufmg.dcc.rm.multiview;
+package ufmg.dcc.rm.qa;
 
 import java.util.HashMap;
 import java.util.Map;

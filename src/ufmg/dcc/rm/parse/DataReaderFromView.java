@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import ufmg.dcc.rm.multiview.Answer;
-import ufmg.dcc.rm.multiview.Question;
+import ufmg.dcc.rm.qa.Answer;
+import ufmg.dcc.rm.qa.Question;
+import ufmg.dcc.rm.util.conf.ViewConfiguration;
 
 public class DataReaderFromView implements FileParserStrategy {
 
@@ -36,6 +37,8 @@ public class DataReaderFromView implements FileParserStrategy {
 		String q = null;
 		HashMap<String, Double> predictionView;
 
+		ViewConfiguration conf = ViewConfiguration.getInstance();
+		
 		for (int i = 0; i < files.size(); i++) {
 
 			in = new File(path + files.get(i));
