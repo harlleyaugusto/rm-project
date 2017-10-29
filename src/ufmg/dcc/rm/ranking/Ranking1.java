@@ -4,27 +4,15 @@ import ufmg.dcc.rm.parse.*;
 import ufmg.dcc.rm.qa.*;
 import ufmg.dcc.rm.util.SortHashMapByValues;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 
 public class Ranking1 {
 
 	public static void main(String[] args) throws IOException {
 
-		ArrayList<String> files = new ArrayList<String>();
-
-		files.add("stack_multiview_user_results_stack.txt");
-		files.add("stack_multiview_usergraph_results_stack.txt");
-		files.add("stack_multiview_style_results_stack.txt");
-		files.add("stack_multiview_structure_results_stack.txt");
-		files.add("stack_multiview_relevance_results_stack.txt");
-		files.add("stack_multiview_read_results_stack.txt");
-		files.add("stack_multiview_length_results_stack.txt");
-		files.add("stack_multiview_history_results_stack.txt");
-
+	
 		FileParserContext fpc = new FileParserContext(new DataReaderFromView());
 
 		HashMap<Integer, Question> questions = fpc.parse();
