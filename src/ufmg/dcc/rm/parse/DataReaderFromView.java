@@ -9,20 +9,9 @@ import java.util.Scanner;
 
 import ufmg.dcc.rm.qa.Answer;
 import ufmg.dcc.rm.qa.Question;
-import ufmg.dcc.rm.util.conf.ViewConfiguration;
+import ufmg.dcc.rm.util.conf.ConfigurationView;
 
 public class DataReaderFromView implements FileParserStrategy {
-
-	private String path;
-	ArrayList<String> files;
-
-
-	public DataReaderFromView(String path, ArrayList<String> files) {
-		super();
-		this.path = path;
-		this.files = files;
-
-	}
 
 	@Override
 	public HashMap<Integer, Question> parse() throws FileNotFoundException {
@@ -37,13 +26,13 @@ public class DataReaderFromView implements FileParserStrategy {
 		String q = null;
 		HashMap<String, Double> predictionView;
 
-		ViewConfiguration conf = ViewConfiguration.getInstance();
-		
-		for (int i = 0; i < files.size(); i++) {
+		ConfigurationView conf = ConfigurationView.getInstance();
 
-			in = new File(path + files.get(i));
+		for (int i = 0; i < conf.files_views.length; i++) {
+
+			in = new File(conf.path_files + conf.files_views[i]);
 			scanner = new Scanner(in);
-			String view = files.get(i).split("_")[2];
+			String view = conf.files_views[i].split("_")[2];
 
 			try {
 				q = scanner.nextLine();
@@ -65,7 +54,7 @@ public class DataReaderFromView implements FileParserStrategy {
 
 					ans = new Answer(aid, qid, targetResult, fold, predictionView);
 
-					if (!questions.containsKey(qid)) {	
+					if (!questions.containsKey(qid)) {
 						Question quest = new Question(qid, ans);
 						questions.put(qid, quest);
 
@@ -88,30 +77,5 @@ public class DataReaderFromView implements FileParserStrategy {
 		return questions;
 	}
 
-	public static void main(String[] args) throws IOException {
-		ArrayList<String> files = new ArrayList<String>();
-
-		files.add("stack_multiview_user_results_stack.txt");
-		files.add("stack_multiview_usergraph_results_stack.txt");
-		files.add("stack_multiview_style_results_stack.txt");
-		files.add("stack_multiview_structure_results_stack.txt");
-		files.add("stack_multiview_relevance_results_stack.txt");
-		files.add("stack_multiview_read_results_stack.txt");
-		files.add("stack_multiview_length_results_stack.txt");
-		files.add("stack_multiview_history_results_stack.txt");
-
-		DataReaderFromView data = new DataReaderFromView(
-				"/home/harlley/Projects/rm-project/data/experiments_results_qa/", files);
-		HashMap<Integer, Question> questions = data.parse();
-		int totalAns = 0;
-
-		Answer ans = Question.getAnswer(questions, 3129290);
-		
-		for (String view : ans.getPredictedView().keySet())
-			System.out.println("Question: " + ans.getQid() + " Fold: "+ ans.getFold() + " targetResult: " + ans.getTargetResult() +" View: " + view + " score: " + ans.getPredictedView().get(view));
-		
-		System.out.println("total: " + totalAns);
-
-	}
-
+	
 }

@@ -25,14 +25,14 @@ public class Ranking1 {
 		files.add("stack_multiview_length_results_stack.txt");
 		files.add("stack_multiview_history_results_stack.txt");
 
-		FileParserContext fpc = new FileParserContext(
-				new DataReaderFromView("/home/harlley/Projects/rm-project/data/experiments_results_qa/", files));
+		FileParserContext fpc = new FileParserContext(new DataReaderFromView());
+
 		HashMap<Integer, Question> questions = fpc.parse();
 
 		Answer ans = Question.getAnswer(questions, 2833789);
-		
+
 		HashMap<String, Double> pv = ans.getPredictedView();
-		
+
 		pv = (HashMap<String, Double>) SortHashMapByValues.sortByValue(pv);
 
 		for (String view : pv.keySet())
@@ -40,20 +40,20 @@ public class Ranking1 {
 					+ ans.getTargetResult() + " View: " + view + " score: " + ans.getPredictedView().get(view));
 
 		System.out.println("Questions size:" + questions.size());
-		
+
 		questions.get(458721).sortingAnswerPerView();
 		questions.get(458721).rankingByTarget();
 		Question.sortingAllAnswer(questions);
-		
-		/*Process shell = null;
-		shell = Runtime.getRuntime().exec("Rscript /home/harlley/Projects/rm-project/rankingScript.R");
 
-		BufferedReader reader = null;
-		reader = new BufferedReader(new InputStreamReader(shell.getInputStream()));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			System.out.println(line);
-
-		}*/
+		/*
+		 * Process shell = null; shell = Runtime.getRuntime().exec(
+		 * "Rscript /home/harlley/Projects/rm-project/rankingScript.R");
+		 * 
+		 * BufferedReader reader = null; reader = new BufferedReader(new
+		 * InputStreamReader(shell.getInputStream())); String line; while ((line
+		 * = reader.readLine()) != null) { System.out.println(line);
+		 * 
+		 * }
+		 */
 	}
 }
