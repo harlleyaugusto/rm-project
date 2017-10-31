@@ -11,12 +11,11 @@ public class Answer {
 	private int fold;
 	
 	
-	public Answer(int id, int qid,double targetResult, int fold, HashMap<String, Double> predictedView) {
+	public Answer(int id, int qid,double targetResult, int fold, HashMap<String, Double> predictionView) {
 		super();
-		predictedView = new HashMap<String, Double>();
 		this.id = id;
 		this.targetResult = targetResult;
-		this.predictionView = predictedView;
+		this.predictionView = predictionView;
 		this.fold = fold;
 		this.qid = qid;
 	}
@@ -54,8 +53,8 @@ public class Answer {
 	/**
 	 * @param predictedView the predictedView to set
 	 */
-	public void setPredictedView(HashMap<String, Double> predictedView) {
-		this.predictionView = predictedView;
+	public void setPredictedView(HashMap<String, Double> predictionView) {
+		this.predictionView = predictionView;
 	}
 
 

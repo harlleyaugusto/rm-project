@@ -1,6 +1,12 @@
 package ufmg.dcc.rm.rankaggreg;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import ufmg.dcc.rm.parse.DataReaderFromView;
@@ -9,6 +15,8 @@ import ufmg.dcc.rm.qa.Answer;
 import ufmg.dcc.rm.qa.Question;
 
 public class CrossEntropyMonteCarlo extends RankingAggregation {
+
+	PrintWriter writer; //
 
 	public CrossEntropyMonteCarlo() {
 		super();
@@ -21,13 +29,72 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 	}
 
 	@Override
-	public void sorting() {
+	public void sorting() throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
+		boolean first = true;
+		int count = 1;
 		for (Integer qid : forum.keySet()) {
+			System.out.println("******" + count + "/" + forum.size() + "******");
+			count++;
+			String file = "data/rankaggr/" + qid + "_sorting";
+			writer = new PrintWriter(file, "UTF-8");
+			writer.flush();
 			for (String view : forum.get(qid).getRankingView().keySet()) {
-				
+				writer.flush();
+				for (Integer aid : forum.get(qid).getRankingView().get(view).keySet()) {
+					writer.flush();
+					if (first) {
+						writer.print(aid);
+						first = false;
+					} else {
+						writer.print(" " + aid);
+					}
+				}
+				first = true;
+				writer.flush();
+				writer.println();
+
 			}
+			
+			optimalRanking = result(qid, forum.get(qid).getAnswers().size());
+			
+			writer.close();
 		}
+	}
+
+	private ArrayList<Integer> result(int qid, int sizeOfList) throws IOException, InterruptedException {
+
+		String scriptFile = "scriptR/" + qid + ".R";
+		PrintWriter writerScript = new PrintWriter(scriptFile, "UTF-8");
+		
+
+		writerScript.println("require(RankAggreg)");
+		writerScript.println("d <- as.matrix(read.table(\"data/rankaggr/" + qid
+				+ "_sorting\", header=FALSE, sep = \" \", as.is=TRUE), nrow=8,ncol=" + sizeOfList + ")");
+		writerScript.println("d");
+		if(sizeOfList > 10)
+			writerScript.println("RankAggreg(d," + 10 + ", method=\"CE\", distance = \"Spearman\", rho=.1, verbose = FALSE)");
+		else
+			writerScript.println("RankAggreg(d," + sizeOfList + ", method=\"CE\", distance = \"Spearman\", rho=.1, verbose = FALSE)");
+		
+		writerScript.flush();
+		writerScript.close();
+
+		Process shell = null;
+		shell = Runtime.getRuntime().exec("Rscript " + scriptFile);
+		shell.waitFor();
+
+		
+		System.out.println("Question: " + qid);
+		BufferedReader reader = null;
+		reader = new BufferedReader(new InputStreamReader(shell.getInputStream()));
+		String line;
+		while ((line = reader.readLine()) != null) {
+			System.out.flush();
+			System.out.println(line);
+		}
+		reader.close();
+		return null;
 	}
 
 	@Override
@@ -36,12 +103,14 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 
 	}
 
-	/*
-	 * public static void main(String[] args) throws FileNotFoundException { //
-	 * TODO Auto-generated method stub
-	 * 
-	 * FileParserContext fpc = new FileParserContext(new DataReaderFromView());
-	 * HashMap<Integer, Question> questions = fpc.parse(); }
-	 */
+	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
+
+		CrossEntropyMonteCarlo CE = new CrossEntropyMonteCarlo();
+
+		CE.run();
+
+		System.out.println(CE.forum.get(3719226).getAnswer(3719278).getPredictedView().get("user"));
+		System.out.println(CE.forum.get(3719226).getRankingView().get("user").get(3719278));
+	}
 
 }
