@@ -14,7 +14,7 @@ public abstract class RankingAggregation {
 
 	protected HashMap<Integer, Question> forum;
 	protected FileParserContext fpc;
-	protected ArrayList<Integer> optimalRanking;
+	protected HashMap<Integer, ArrayList<Integer>> optimalRanking;
 
 	protected abstract void before() throws FileNotFoundException;
 
@@ -25,7 +25,7 @@ public abstract class RankingAggregation {
 	public RankingAggregation() {
 		forum = new HashMap<Integer, Question>();
 		fpc = new FileParserContext(new DataReaderFromView());
-		optimalRanking = new ArrayList<Integer>();
+		optimalRanking = new HashMap<Integer, ArrayList<Integer>>();
 	}
 
 	protected void run() throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
