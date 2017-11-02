@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ufmg.dcc.rm.experiments.RunExperiment;
 import ufmg.dcc.rm.parse.DataReaderFromView;
 import ufmg.dcc.rm.parse.FileParserContext;
 import ufmg.dcc.rm.qa.Answer;
@@ -25,7 +27,7 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 	@Override
 	public void before() throws FileNotFoundException {
 		forum = fpc.parse();
-		Question.sortingAllAnswer(forum);
+		Question.sortingAllAnswerPerView(forum);	
 	}
 
 	@Override
@@ -59,6 +61,7 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 			optimalRanking = result(qid, forum.get(qid).getAnswers().size());
 
 			writer.close();
+			break;
 		}
 	}
 
@@ -90,7 +93,8 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		BufferedReader reader = null;
 		reader = new BufferedReader(new InputStreamReader(shell.getInputStream()));
 		String line;
-		ArrayList<Integer> ranking = new ArrayList();
+		ArrayList<Integer> ranking = new ArrayList<Integer>();
+		
 		while ((line = reader.readLine()) != null) {
 
 			System.out.println(line);
@@ -102,8 +106,9 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 					ranking.add(new Integer(order[i]));
 				}
 			}
-			optimalRanking.put(qid, ranking);
 		}
+		System.out.println("ranking.size():" + ranking.size());
+		optimalRanking.put(qid, ranking);
 		reader.close();
 		return optimalRanking;
 	}
@@ -111,7 +116,9 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 	@Override
 	protected void after() {
 		// TODO Auto-generated method stub
-
+		RunExperiment re = new RunExperiment(this);
+		re.runNDCG();
+			
 	}
 
 	public static void main(String[] args)

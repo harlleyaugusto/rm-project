@@ -19,6 +19,7 @@ public class Question {
 		this.id = id;
 		answers = new HashMap<Integer, Answer>();
 		rankingPerView =  new HashMap<String, HashMap<Integer, Double>>();
+		rankingTarget = new HashMap<Integer, Double>();
 		setAnswer(ans);
 	}
 	
@@ -92,6 +93,8 @@ public class Question {
 
 	public void setAnswer(Answer ans) {
 		answers.put(ans.getId(), ans);
+		rankingTarget.put(ans.getId(), ans.getTargetResult());
+		
 	}
 
 	public int getSizePredictedView() {
@@ -109,42 +112,9 @@ public class Question {
 			rankingPerView.put(view, (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(rankingPerView.get(view)));
 			
 		}
-		
-		/*for(String view : rankingPerView.keySet())
-		{
-			System.out.print(view + " ");
-			for(Integer aid : rankingPerView.get(view).keySet())
-			{
-				System.out.print(aid + ":" + rankingPerView.get(view).get(aid) + " ");
-			}
-			System.out.println();
-		}*/
-		
-		/*Entry<Integer, Answer> entry = answers.entrySet().iterator().next();
-		Answer ans = entry.getValue();
-		HashMap<Integer, Double> ranking = new HashMap<Integer, Double>();
-
-		rankingPerView = new HashMap<String, HashMap<Integer, Double>>();
-
-		for (String view : ans.getPredictedView().keySet()) {
-			for (Integer ansEachView : answers.keySet()) {
-				ranking.put(ansEachView, answers.get(ansEachView).getPredictedView().get(view));
-			}
-
-			ranking = (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(ranking);
-
-			rankingPerView.put(view, ranking);
-
-			System.out.print(view + " ");
-			for (Integer aid : ranking.keySet())
-				System.out.print(aid + ":" + ranking.get(aid) + " ");
-			System.out.println();
-		}
-
-		return ranking;*/
 	}
 	
-	public static void sortingAllAnswer(HashMap<Integer, Question> questions)
+	public static void sortingAllAnswerPerView(HashMap<Integer, Question> questions)
 	{
 		for(Integer qid : questions.keySet()) 
 			questions.get(qid).sortingAnswerPerView();
@@ -160,7 +130,7 @@ public class Question {
 		}
 	}
 
-	public HashMap<Integer, Double> rankingByTarget() {
+	public HashMap<Integer, Double> sortingByTarget() {
 
 		rankingTarget = new HashMap<Integer, Double>();
 
@@ -170,9 +140,9 @@ public class Question {
 
 		rankingTarget = (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(rankingTarget);
 
-		for (Integer aid : rankingTarget.keySet()) {
+		/*for (Integer aid : rankingTarget.keySet()) {
 			System.out.print(aid + ":" + rankingTarget.get(aid) + " ");
-		}
+		}*/
 
 		return rankingTarget;
 	}

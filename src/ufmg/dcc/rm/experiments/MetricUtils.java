@@ -1,4 +1,4 @@
-package ufmg.dcc.rm.metrics;
+package ufmg.dcc.rm.experiments;
 
 import java.util.Arrays;
 

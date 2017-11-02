@@ -30,8 +30,8 @@ public class Ranking1 {
 		System.out.println("Questions size:" + questions.size());
 
 		questions.get(458721).sortingAnswerPerView();
-		questions.get(458721).rankingByTarget();
-		Question.sortingAllAnswer(questions);
+		questions.get(458721).sortingByTarget();
+		Question.sortingAllAnswerPerView(questions);
 
 		Process shell = null;
 		shell = Runtime.getRuntime().exec("Rscript /home/harlley/Projects/rm-project/rankingScript.R");

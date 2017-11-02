@@ -28,6 +28,48 @@ public abstract class RankingAggregation {
 		optimalRanking = new HashMap<Integer, ArrayList<Integer>>();
 	}
 
+	/**
+	 * @return the forum
+	 */
+	public HashMap<Integer, Question> getForum() {
+		return forum;
+	}
+
+	/**
+	 * @param forum the forum to set
+	 */
+	public void setForum(HashMap<Integer, Question> forum) {
+		this.forum = forum;
+	}
+
+	/**
+	 * @return the fpc
+	 */
+	public FileParserContext getFpc() {
+		return fpc;
+	}
+
+	/**
+	 * @param fpc the fpc to set
+	 */
+	public void setFpc(FileParserContext fpc) {
+		this.fpc = fpc;
+	}
+
+	/**
+	 * @return the optimalRanking
+	 */
+	public HashMap<Integer, ArrayList<Integer>> getOptimalRanking() {
+		return optimalRanking;
+	}
+
+	/**
+	 * @param optimalRanking the optimalRanking to set
+	 */
+	public void setOptimalRanking(HashMap<Integer, ArrayList<Integer>> optimalRanking) {
+		this.optimalRanking = optimalRanking;
+	}
+
 	protected void run() throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
 		this.before();
 		this.sorting();
