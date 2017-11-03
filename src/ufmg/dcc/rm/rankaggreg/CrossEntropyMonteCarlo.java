@@ -63,7 +63,7 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 			
 			writer.close();
 			total++;
-			if(total >20) break;
+			//if(total >20) break;
 		}
 	}
 

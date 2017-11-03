@@ -1,6 +1,7 @@
 package ufmg.dcc.rm.util;
 
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,5 +21,25 @@ public class SortHashMapByValues {
 	                LinkedHashMap::new
 	              ));
 	}
+	
+	/**
+	 * Reverse sorts the specified array in descending order based on the
+	 * evaluation value.
+	 *
+	 * @param ranking
+	 *            the ranking evaluation
+	 * @return the sorted array
+	 */
+	public static Double[] reverseSortDesc(Double[] ranking) {
+		Double[] reverseSorted = new Double[ranking.length];
+		Arrays.sort(ranking);
+		int arrLen = ranking.length;
+		for (int i = arrLen - 1; i >= 0; i--) {
+			int pos = arrLen - 1 - i;
+			reverseSorted[pos] = ranking[i];
+		}
+		return reverseSorted;
+	}
+
 
 }
