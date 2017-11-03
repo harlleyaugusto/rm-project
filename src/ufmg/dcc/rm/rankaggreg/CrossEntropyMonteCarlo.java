@@ -35,6 +35,7 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		// TODO Auto-generated method stub
 		boolean first = true;
 		int count = 1;
+		int total = 0;
 		for (Integer qid : forum.keySet()) {
 			System.out.println("******" + count + "/" + forum.size() + "******");
 			count++;
@@ -58,14 +59,15 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 
 			}
 
-			optimalRanking = result(qid, forum.get(qid).getAnswers().size());
-
+			result(qid, forum.get(qid).getAnswers().size());
+			
 			writer.close();
-			break;
+			total++;
+			if(total >20) break;
 		}
 	}
 
-	private HashMap<Integer, ArrayList<Integer>> result(int qid, int sizeOfList)
+	private void result(int qid, int sizeOfList)
 			throws IOException, InterruptedException {
 
 		String scriptFile = "scriptR/" + qid + ".R";
@@ -89,7 +91,7 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		shell = Runtime.getRuntime().exec("Rscript " + scriptFile);
 		shell.waitFor();
 
-		System.out.println("Question: " + qid);
+		//System.out.println("Question: " + qid);
 		BufferedReader reader = null;
 		reader = new BufferedReader(new InputStreamReader(shell.getInputStream()));
 		String line;
@@ -97,20 +99,21 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		
 		while ((line = reader.readLine()) != null) {
 
-			System.out.println(line);
+			//System.out.println(line);
 			System.out.flush();
 			if (line.contains("The optimal list is:")) {
 				String[] order = reader.readLine().trim().split(" ");
 				for (int i = 0; i < order.length; i++) {
-					System.out.println(order[i]);
+					//System.out.println(order[i]);
 					ranking.add(new Integer(order[i]));
 				}
 			}
 		}
-		System.out.println("ranking.size():" + ranking.size());
+	//	System.out.println("ranking.size():" + ranking.size());
 		optimalRanking.put(qid, ranking);
+	//	System.out.println("optimalRanking.size():" + optimalRanking.size());
 		reader.close();
-		return optimalRanking;
+	
 	}
 
 	@Override
@@ -128,8 +131,8 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 
 		CE.run();
 
-		System.out.println(CE.forum.get(3719226).getAnswer(3719278).getPredictedView().get("user"));
-		System.out.println(CE.forum.get(3719226).getRankingView().get("user").get(3719278));
+		//System.out.println(CE.forum.get(3719226).getAnswer(3719278).getPredictedView().get("user"));
+		//System.out.println(CE.forum.get(3719226).getRankingView().get("user").get(3719278));
 	}
 
 }
