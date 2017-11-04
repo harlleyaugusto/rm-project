@@ -98,7 +98,9 @@ public class MetricUtils {
 			ranking[i] = orgRanking[i];
 		}
 		double dcg = dcg(ranking, expNDCG);
-		double norm = dcg(reverseSortDesc(realClassArray), expNDCG);
+		//double norm = dcg(reverseSortDesc(realClassArray), expNDCG);
+		double norm = dcg(realClassArray, expNDCG);
+
 		return dcg / norm;
 	}
 

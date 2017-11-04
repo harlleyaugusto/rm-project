@@ -2,6 +2,7 @@ package ufmg.dcc.rm.experiments;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import ufmg.dcc.rm.qa.Question;
@@ -30,7 +31,10 @@ public class RunExperiment {
 				optimalList = ranking.get(qid).toArray(optimalList);
 
 				Double[] perfectRanking = new Double[forum.get(qid).getRankingTarget().values().toArray().length];
-				perfectRanking = SortHashMapByValues.reverseSortDesc(forum.get(qid).getRankingTarget().values().toArray(perfectRanking));
+				perfectRanking = forum.get(qid).getRankingTarget().values().toArray(perfectRanking);
+				
+				Arrays.sort(perfectRanking);
+				perfectRanking = SortHashMapByValues.reverseSortDesc(perfectRanking);
 
 				for (int j = 0; j < optimalList.length; j++) {
 					orgRanking[j] = forum.get(qid).getRankingTarget().get(optimalList[j]);
@@ -49,7 +53,7 @@ public class RunExperiment {
 				double ndcg = MetricUtils.ndcg(rangeOrg, rangePerfect, true);
 				if(ndcg > 1.0)
 				{
-					System.out.println(qid);
+					System.out.println("Maior q 1" + qid);
 					MetricUtils.ndcg(rangeOrg, rangePerfect, true);
 				}
 				//System.out.println("ndcg@" + cutoffNDCG[i] + ": " + ndcg);
