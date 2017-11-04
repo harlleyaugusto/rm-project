@@ -2,7 +2,7 @@ package ufmg.dcc.rm.ranking;
 
 import ufmg.dcc.rm.parse.*;
 import ufmg.dcc.rm.qa.*;
-import ufmg.dcc.rm.util.SortHashMapByValues;
+import ufmg.dcc.rm.util.SortUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class Ranking1 {
 
 		HashMap<String, Double> pv = ans.getPredictedView();
 
-		pv = (HashMap<String, Double>) SortHashMapByValues.sortByValue(pv);
+		pv = (HashMap<String, Double>) SortUtil.sortByValue(pv);
 
 		for (String view : pv.keySet())
 			System.out.println("Question: " + ans.getQid() + " Fold: " + ans.getFold() + " targetResult: "

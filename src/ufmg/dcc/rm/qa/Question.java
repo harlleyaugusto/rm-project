@@ -3,7 +3,7 @@ package ufmg.dcc.rm.qa;
 import java.util.HashMap;
 import java.util.Map;
 
-import ufmg.dcc.rm.util.SortHashMapByValues;
+import ufmg.dcc.rm.util.SortUtil;
 
 public class Question {
 
@@ -109,7 +109,7 @@ public class Question {
 	public  void sortingAnswerPerView() {
 		for(String view : rankingPerView.keySet())
 		{
-			rankingPerView.put(view, (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(rankingPerView.get(view)));
+			rankingPerView.put(view, (HashMap<Integer, Double>) SortUtil.sortByValue(rankingPerView.get(view)));
 			
 		}
 	}
@@ -138,7 +138,7 @@ public class Question {
 			rankingTarget.put(aid, answers.get(aid).getTargetResult());
 		}
 
-		rankingTarget = (HashMap<Integer, Double>) SortHashMapByValues.sortByValue(rankingTarget);
+		rankingTarget = (HashMap<Integer, Double>) SortUtil.sortByValue(rankingTarget);
 
 		/*for (Integer aid : rankingTarget.keySet()) {
 			System.out.print(aid + ":" + rankingTarget.get(aid) + " ");

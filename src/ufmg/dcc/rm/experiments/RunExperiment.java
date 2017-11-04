@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import ufmg.dcc.rm.qa.Question;
 import ufmg.dcc.rm.rankaggreg.RankingAggregation;
-import ufmg.dcc.rm.util.SortHashMapByValues;
+import ufmg.dcc.rm.util.SortUtil;
 
 public class RunExperiment {
 
@@ -34,7 +34,7 @@ public class RunExperiment {
 				perfectRanking = forum.get(qid).getRankingTarget().values().toArray(perfectRanking);
 				
 				Arrays.sort(perfectRanking);
-				perfectRanking = SortHashMapByValues.reverseSortDesc(perfectRanking);
+				perfectRanking = SortUtil.reverseSortDesc(perfectRanking);
 
 				for (int j = 0; j < optimalList.length; j++) {
 					orgRanking[j] = forum.get(qid).getRankingTarget().get(optimalList[j]);

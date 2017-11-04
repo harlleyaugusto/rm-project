@@ -109,9 +109,9 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 				}
 			}
 		}
-		// System.out.println("ranking.size():" + ranking.size());
 		optimalRanking.put(qid, ranking);
-		// System.out.println("optimalRanking.size():" + optimalRanking.size());
+		RunExperiment re = new RunExperiment(this);
+		re.runNDCG();
 		reader.close();
 
 	}
