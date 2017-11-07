@@ -13,7 +13,7 @@ import ufmg.dcc.rm.qa.Question;
 public abstract class RankingAggregation {
 
 	protected HashMap<Integer, Question> forum;
-	protected FileParserContext fpc;
+	
 	protected HashMap<Integer, ArrayList<Integer>> optimalRanking;
 
 	protected abstract void before() throws FileNotFoundException;
@@ -24,7 +24,6 @@ public abstract class RankingAggregation {
 
 	public RankingAggregation() {
 		forum = new HashMap<Integer, Question>();
-		fpc = new FileParserContext(new DataReaderFromView());
 		optimalRanking = new HashMap<Integer, ArrayList<Integer>>();
 	}
 
@@ -42,19 +41,6 @@ public abstract class RankingAggregation {
 		this.forum = forum;
 	}
 
-	/**
-	 * @return the fpc
-	 */
-	public FileParserContext getFpc() {
-		return fpc;
-	}
-
-	/**
-	 * @param fpc the fpc to set
-	 */
-	public void setFpc(FileParserContext fpc) {
-		this.fpc = fpc;
-	}
 
 	/**
 	 * @return the optimalRanking

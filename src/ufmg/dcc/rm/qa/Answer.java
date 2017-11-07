@@ -2,6 +2,8 @@ package ufmg.dcc.rm.qa;
 
 import java.util.HashMap;
 
+import com.sun.org.apache.xpath.internal.axes.PredicatedNodeTest;
+
 public class Answer {
 	private int id;
 	private int qid;
@@ -16,6 +18,15 @@ public class Answer {
 		this.id = id;
 		this.targetResult = targetResult;
 		this.predictionView = predictionView;
+		this.fold = fold;
+		this.qid = qid;
+	}
+	
+	public Answer(int id, int qid,double targetResult, int fold, double globalPrediction) {
+		super();
+		this.id = id;
+		this.targetResult = targetResult;
+		this.globalPrediction = globalPrediction;
 		this.fold = fold;
 		this.qid = qid;
 	}

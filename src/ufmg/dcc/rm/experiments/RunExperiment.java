@@ -51,11 +51,11 @@ public class RunExperiment {
 				}
 
 				double ndcg = MetricUtils.ndcg(rangeOrg, rangePerfect, true);
-				if(ndcg > 1.0)
+				/*if(ndcg > 1.0)
 				{
 					System.out.println("Maior q 1" + qid);
 					MetricUtils.ndcg(rangeOrg, rangePerfect, true);
-				}
+				}*/
 				//System.out.println("ndcg@" + cutoffNDCG[i] + ": " + ndcg);
 				ndcgAcc += ndcg;
 			}
