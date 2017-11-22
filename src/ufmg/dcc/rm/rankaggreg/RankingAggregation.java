@@ -15,16 +15,17 @@ public abstract class RankingAggregation {
 	protected HashMap<Integer, Question> forum;
 	
 	protected HashMap<Integer, ArrayList<Integer>> optimalRanking;
-
+	
 	protected abstract void before() throws FileNotFoundException;
 
 	protected abstract void sorting() throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException;
 
-	protected abstract void after();
+	protected abstract void after() throws IOException; 
 
 	public RankingAggregation() {
 		forum = new HashMap<Integer, Question>();
 		optimalRanking = new HashMap<Integer, ArrayList<Integer>>();
+
 	}
 
 	/**
@@ -61,5 +62,6 @@ public abstract class RankingAggregation {
 		this.sorting();
 		this.after();
 	}
+
 
 }

@@ -18,7 +18,7 @@ import ufmg.dcc.rm.qa.Question;
 
 public class CrossEntropyMonteCarlo extends RankingAggregation {
 
-	PrintWriter writer; //
+	PrintWriter writer;
 	protected FileParserContext fpc;
 
 	public CrossEntropyMonteCarlo() {
@@ -40,7 +40,8 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		int total = 0;
 		for (Integer qid : forum.keySet()) {
 
-			System.out.println("******" + count + "/" + forum.size() + "******");
+			System.out.println(
+					"******" + count + "/" + forum.size() + "****** # answer: " + forum.get(qid).getAnswers().size());
 			count++;
 			String file = "data/rankaggr/" + qid + "_sorting";
 			writer = new PrintWriter(file, "UTF-8");
@@ -66,7 +67,9 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 
 			writer.close();
 			total++;
-			// if(total >20) break;
+			/*
+			 * if (total > 10) break;
+			 */
 		}
 	}
 
@@ -79,12 +82,20 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		writerScript.println("d <- as.matrix(read.table(\"data/rankaggr/" + qid
 				+ "_sorting\", header=FALSE, sep = \" \", as.is=TRUE), nrow=8,ncol=" + sizeOfList + ")");
 		writerScript.println("d");
-		if (sizeOfList > 10)
-			writerScript.println(
-					"RankAggreg(d," + 10 + ", method=\"CE\", distance = \"Spearman\", rho=.1, verbose = FALSE)");
+
+		int N = 10 * sizeOfList * sizeOfList;
+		double rho;
+		if (N < 100)
+			rho = .1;
 		else
-			writerScript.println("RankAggreg(d," + sizeOfList
-					+ ", method=\"CE\", distance = \"Spearman\", rho=.1, verbose = FALSE)");
+			rho = .1;
+
+		if (sizeOfList > 10)
+			writerScript.println("RankAggreg(d," + 10 + ", method=\"CE\", distance = \"Spearman\", rho=.01, N ="
+					+ 10 * (10 * 10) + ",  verbose = FALSE)");
+		else
+			writerScript.println("RankAggreg(d," + sizeOfList + ", method=\"CE\", distance = \"Spearman\", rho=" + rho
+					+ ", N=" + 10 * (sizeOfList * sizeOfList) + ", verbose = FALSE)");
 
 		writerScript.flush();
 		writerScript.close();
@@ -101,12 +112,12 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 
 		while ((line = reader.readLine()) != null) {
 
-			// System.out.println(line);
+			System.out.println(line);
 			System.out.flush();
 			if (line.contains("The optimal list is:")) {
 				String[] order = reader.readLine().trim().split(" ");
 				for (int i = 0; i < order.length; i++) {
-					// System.out.println(order[i]);
+					System.out.println(order[i]);
 					ranking.add(new Integer(order[i]));
 				}
 			}
@@ -117,7 +128,7 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 	}
 
 	@Override
-	protected void after() {
+	protected void after() throws IOException {
 		// TODO Auto-generated method stub
 		RunExperiment re = new RunExperiment(this);
 		re.runNDCG();
@@ -127,18 +138,24 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 	public static void main(String[] args)
 			throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
 
-		CrossEntropyMonteCarlo CE = new CrossEntropyMonteCarlo();
+		/*CrossEntropyMonteCarlo CE = new CrossEntropyMonteCarlo();
 
 		CE.run();
-		
+
 		System.out.println("*****************************");
-		
+*/
 		StackingAggregation SA = new StackingAggregation();
-		
+
 		SA.run();
 
-		// System.out.println(CE.forum.get(3719226).getAnswer(3719278).getPredictedView().get("user"));
-		// System.out.println(CE.forum.get(3719226).getRankingView().get("user").get(3719278));
+		System.out.println("*****************************");
+
+		GeneticAlgorithm GA = new GeneticAlgorithm();
+
+		GA.run();
+
+		RunExperiment.compareRankings(SA, GA);
+		
 	}
 
 }

@@ -11,7 +11,7 @@ public class Answer {
 	private double globalPrediction;
 	HashMap<String, Double> predictionView;// = new HashMap<String, Double>();
 	private int fold;
-	
+
 	
 	public Answer(int id, int qid,double targetResult, int fold, HashMap<String, Double> predictionView) {
 		super();
@@ -126,4 +126,6 @@ public class Answer {
 	public int getSizePredictedView(){
 		return predictionView.size();
 	}
+	
+	
 }

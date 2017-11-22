@@ -12,10 +12,12 @@ import ufmg.dcc.rm.util.SortUtil;
 public class RunExperiment {
 
 	RankingAggregation method;
-	final Integer[] cutoffNDCG = { 1, 2, 3, 4,5,6,7, 8,9, 10 };
+	final Integer[] cutoffNDCG = { 1, 2, 3, 4, 5,6,7, 8,9, 10 };
+	public double avgNDCG; 
 
 	public RunExperiment(RankingAggregation m) {
 		method = m;
+		avgNDCG = 0;
 	}
 
 	public void runNDCG() {
@@ -51,6 +53,8 @@ public class RunExperiment {
 				}
 
 				double ndcg = MetricUtils.ndcg(rangeOrg, rangePerfect, true);
+				forum.get(qid).setNDCG(i, ndcg);
+				
 				/*if(ndcg > 1.0)
 				{
 					System.out.println("Maior q 1" + qid);
@@ -60,12 +64,27 @@ public class RunExperiment {
 				ndcgAcc += ndcg;
 			}
 			System.out.println("Avg ndcg@" + cutoffNDCG[i] + ": " + ndcgAcc/ranking.keySet().size());
+			avgNDCG += ndcgAcc/ranking.keySet().size();
 			//System.out.println("*********************");
 		}
-		
-
+		avgNDCG =  avgNDCG/10;
+		System.out.println("Avg avg ndcg:" + avgNDCG);
 	}
 
+	public static void compareRankings(RankingAggregation a, RankingAggregation b)
+	{
+		for (Integer qid : a.getForum().keySet())
+		{
+			double avg_a = a.getForum().get(qid).getAvgNDCG();
+			double avg_b = b.getForum().get(qid).getAvgNDCG();
+			
+			if(avg_a < avg_b)
+			{
+				System.out.println(qid);
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		int[] arr = { 10, 20, 30, 40, 50 };
 		Arrays.copyOfRange(arr, 0, 2); // returns {10, 20}

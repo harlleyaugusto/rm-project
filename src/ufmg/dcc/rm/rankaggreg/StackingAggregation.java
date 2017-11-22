@@ -54,7 +54,7 @@ public class StackingAggregation extends RankingAggregation {
 	}
 
 	@Override
-	protected void after() {
+	protected void after() throws IOException {
 		// TODO Auto-generated method stub
 		RunExperiment re = new RunExperiment(this);
 		re.runNDCG();

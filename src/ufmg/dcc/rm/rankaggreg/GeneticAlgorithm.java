@@ -17,10 +17,29 @@ public class GeneticAlgorithm extends RankingAggregation {
 
 	PrintWriter writer; //
 	protected FileParserContext fpc;
+	protected int convIn;
+	RunExperiment re;
+
+	protected int popSize;
+	protected double CP;
+	protected double MP;
 
 	public GeneticAlgorithm() {
 		super();
 		fpc = new FileParserContext(new DataReaderFromView());
+		popSize = 100;
+		convIn = 30;
+		CP = .4;
+		MP = .01;
+	}
+
+	public GeneticAlgorithm(int popSize, int convIn, double CP, double MP) {
+		super();
+		fpc = new FileParserContext(new DataReaderFromView());
+		this.popSize = popSize;
+		this.convIn = convIn;
+		this.CP = CP;
+		this.MP = MP;
 	}
 
 	@Override
@@ -37,7 +56,7 @@ public class GeneticAlgorithm extends RankingAggregation {
 		int total = 0;
 		for (Integer qid : forum.keySet()) {
 
-			System.out.println("******" + count + "/" + forum.size() + "******");
+			//System.out.println("******" + count + "/" + forum.size() + "******");
 			count++;
 			String file = "data/rankaggr/" + qid + "_sorting";
 			writer = new PrintWriter(file, "UTF-8");
@@ -63,7 +82,7 @@ public class GeneticAlgorithm extends RankingAggregation {
 
 			writer.close();
 			total++;
-			// if(total >1000) break;
+			// if(total >10) break;
 		}
 	}
 
@@ -73,21 +92,32 @@ public class GeneticAlgorithm extends RankingAggregation {
 		PrintWriter writerScript = new PrintWriter(scriptFile, "UTF-8");
 
 		writerScript.println("require(RankAggreg)");
-		writerScript.println("d <- as.matrix(read.table(\"data/rankaggr/" + qid
+		writerScript.println("d <- as.matrix(read.table(\"/home/harlley/Projects/rm-project/data/rankaggr/" + qid
 				+ "_sorting\", header=FALSE, sep = \" \", as.is=TRUE), nrow=8,ncol=" + sizeOfList + ")");
 		writerScript.println("d");
-		if (sizeOfList > 10)
-			writerScript.println(
-					"RankAggreg(d," + 10 + ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize=100, CP=.4, MP=.01, verbose = FALSE)");
-		else
-			writerScript.println("RankAggreg(d," + sizeOfList
-					+ ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize=100, CP=.4, MP=.01, verbose = FALSE)");
 
+		int k;
+		if (sizeOfList > 10)
+			k = 10;
+		else
+			k = sizeOfList;
+
+		writerScript.println(
+				"RankAggreg(d," + k + ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize="
+						+ popSize + ", CP=" + CP + ", MP=" + MP + ", convIn =" + convIn + ", verbose = FALSE)");
+
+		/*
+		 * if (sizeOfList > 10) writerScript.println("RankAggreg(d," + k +
+		 * ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize=100, CP=.4, MP=.01, verbose = FALSE)"
+		 * ); else writerScript.println("RankAggreg(d," + sizeOfList +
+		 * ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize=100, CP=.4, MP=.01, verbose = FALSE)"
+		 * );
+		 */
 		writerScript.flush();
 		writerScript.close();
-		
+
 		Process shell = null;
-		
+
 		shell = Runtime.getRuntime().exec("Rscript " + scriptFile);
 		shell.waitFor();
 
@@ -99,35 +129,51 @@ public class GeneticAlgorithm extends RankingAggregation {
 
 		while ((line = reader.readLine()) != null) {
 
-			 System.out.println(line);
+			// System.out.println(line);
 			System.out.flush();
 			if (line.contains("The optimal list is:")) {
 				String[] order = reader.readLine().trim().split(" ");
 				for (int i = 0; i < order.length; i++) {
-					// System.out.println(order[i]);
+				//	 System.out.println(order[i]);
 					ranking.add(new Integer(order[i]));
 				}
 			}
 		}
 		optimalRanking.put(qid, ranking);
 		reader.close();
-		
-		
 
 	}
 
 	@Override
-	protected void after() {
+	protected void after() throws IOException {
 		// TODO Auto-generated method stub
-		RunExperiment re = new RunExperiment(this);
+		re = new RunExperiment(this);
 		re.runNDCG();
 
 	}
 
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
+	public static void main(String[] args)
+			throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		GeneticAlgorithm ga = new GeneticAlgorithm();
-		ga.run();
+		System.out.println("COOK tunning");
+		int total =1;
+		double bestNDCg = 0.0;
+		for (double CP = 0.1; CP < 0.61; CP += 0.1) {
+			for (double MP = 0.01; MP < 0.9; MP += 0.01) {
+				System.out.println("Total:"+ total+ "/48 CP: " + CP + " MP: " + MP);
+				GeneticAlgorithm ga = new GeneticAlgorithm(100, 30, CP, MP);
+				ga.run();
+				if (bestNDCg < ga.re.avgNDCG)
+				{
+					System.out.println("*****Best avg avg ndcg: " + ga.re.avgNDCG);
+					System.out.println("*****CP: " + CP + " MP: " + MP);
+					bestNDCg = ga.re.avgNDCG;
+				}
+					
+				total++;
+			}
+		}
+		
 	}
 
 }
