@@ -8,10 +8,11 @@ public class Answer {
 	private int id;
 	private int qid;
 	private double targetResult;
-	private double globalPrediction;
+	private double predictedScore;
 	HashMap<String, Double> predictionView;// = new HashMap<String, Double>();
 	private int fold;
 
+	private HashMap<Integer, Double> features;
 	
 	public Answer(int id, int qid,double targetResult, int fold, HashMap<String, Double> predictionView) {
 		super();
@@ -20,15 +21,17 @@ public class Answer {
 		this.predictionView = predictionView;
 		this.fold = fold;
 		this.qid = qid;
+		features = new HashMap<Integer, Double>();
 	}
 	
-	public Answer(int id, int qid,double targetResult, int fold, double globalPrediction) {
+	public Answer(int id, int qid,double targetResult, int fold, double predictedScore) {
 		super();
 		this.id = id;
 		this.targetResult = targetResult;
-		this.globalPrediction = globalPrediction;
+		this.predictedScore = predictedScore;
 		this.fold = fold;
 		this.qid = qid;
+		features = new HashMap<Integer, Double>();
 	}
 	
 	/**
@@ -46,14 +49,14 @@ public class Answer {
 	/**
 	 * @return the predictedResultGlobal
 	 */
-	public double getPredictedResultGlobal() {
-		return globalPrediction;
+	public double getPredictedScore() {
+		return predictedScore;
 	}
 	/**
 	 * @param predictedResultGlobal the predictedResultGlobal to set
 	 */
-	public void setPredictedResultGlobal(double predictedResultGlobal) {
-		this.globalPrediction = predictedResultGlobal;
+	public void setPredictedScore(double predictedScore) {
+		this.predictedScore = predictedScore;
 	}
 	/**
 	 * @return the predictedView
@@ -97,13 +100,13 @@ public class Answer {
 	 * @return the predictedResult
 	 */
 	public double getPredictedResult() {
-		return globalPrediction;
+		return predictedScore;
 	}
 	/**
 	 * @param predictedResult the predictedResult to set
 	 */
 	public void setPredictedResult(double predictedResult) {
-		this.globalPrediction = predictedResult;
+		this.predictedScore = predictedResult;
 	}
 	/**
 	 * @return the fold
@@ -127,5 +130,12 @@ public class Answer {
 		return predictionView.size();
 	}
 	
+	public void setFeatures(HashMap<Integer, Double> features)
+	{	
+		this.features = features;
+	}
 	
+	public HashMap<Integer, Double> getFeatures(){
+		return this.features;
+	}
 }

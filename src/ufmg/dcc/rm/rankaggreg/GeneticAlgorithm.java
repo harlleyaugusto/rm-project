@@ -23,6 +23,8 @@ public class GeneticAlgorithm extends RankingAggregation {
 	protected int popSize;
 	protected double CP;
 	protected double MP;
+	protected int seed;
+	protected int maxInter;
 
 	public GeneticAlgorithm() {
 		super();
@@ -31,15 +33,21 @@ public class GeneticAlgorithm extends RankingAggregation {
 		convIn = 30;
 		CP = .4;
 		MP = .01;
+		seed = 123;
+		maxInter = 100;
+		name = "GA";
 	}
 
-	public GeneticAlgorithm(int popSize, int convIn, double CP, double MP) {
+	public GeneticAlgorithm(int popSize, int convIn, double CP, double MP, int seed, int maxInter) {
 		super();
 		fpc = new FileParserContext(new DataReaderFromView());
 		this.popSize = popSize;
 		this.convIn = convIn;
 		this.CP = CP;
 		this.MP = MP;
+		this.seed = seed;
+		this.maxInter = maxInter;
+		name = "GA";
 	}
 
 	@Override
@@ -53,10 +61,9 @@ public class GeneticAlgorithm extends RankingAggregation {
 		// TODO Auto-generated method stub
 		boolean first = true;
 		int count = 1;
-		int total = 0;
 		for (Integer qid : forum.keySet()) {
 
-			//System.out.println("******" + count + "/" + forum.size() + "******");
+			System.out.println("******" + count + "/" + forum.size() + "******");
 			count++;
 			String file = "data/rankaggr/" + qid + "_sorting";
 			writer = new PrintWriter(file, "UTF-8");
@@ -75,24 +82,21 @@ public class GeneticAlgorithm extends RankingAggregation {
 				first = true;
 				writer.flush();
 				writer.println();
-
 			}
 
-			result(qid, forum.get(qid).getAnswers().size());
+			rGA(qid, forum.get(qid).getAnswers().size());
 
 			writer.close();
-			total++;
-			// if(total >10) break;
 		}
 	}
 
-	private void result(int qid, int sizeOfList) throws IOException, InterruptedException {
+	private void rGA(int qid, int sizeOfList) throws IOException, InterruptedException {
 
 		String scriptFile = "scriptR/" + qid + ".R";
 		PrintWriter writerScript = new PrintWriter(scriptFile, "UTF-8");
 
 		writerScript.println("require(RankAggreg)");
-		writerScript.println("d <- as.matrix(read.table(\"/home/harlley/Projects/rm-project/data/rankaggr/" + qid
+		writerScript.println("d <- as.matrix(read.table(\"data/rankaggr/" + qid
 				+ "_sorting\", header=FALSE, sep = \" \", as.is=TRUE), nrow=8,ncol=" + sizeOfList + ")");
 		writerScript.println("d");
 
@@ -102,17 +106,10 @@ public class GeneticAlgorithm extends RankingAggregation {
 		else
 			k = sizeOfList;
 
-		writerScript.println(
-				"RankAggreg(d," + k + ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize="
-						+ popSize + ", CP=" + CP + ", MP=" + MP + ", convIn =" + convIn + ", verbose = FALSE)");
+		writerScript.println("RankAggreg(d," + k + ", method=\"GA\", distance = \"Spearman\", seed=" + seed
+				+ ", maxInter=1000, popSize=" + popSize + ", CP=" + CP + ", MP=" + MP + ", convIn =" + convIn
+				+ ", verbose = FALSE)");
 
-		/*
-		 * if (sizeOfList > 10) writerScript.println("RankAggreg(d," + k +
-		 * ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize=100, CP=.4, MP=.01, verbose = FALSE)"
-		 * ); else writerScript.println("RankAggreg(d," + sizeOfList +
-		 * ", method=\"GA\", distance = \"Spearman\", seed=123, maxInter=1000, popSize=100, CP=.4, MP=.01, verbose = FALSE)"
-		 * );
-		 */
 		writerScript.flush();
 		writerScript.close();
 
@@ -121,20 +118,16 @@ public class GeneticAlgorithm extends RankingAggregation {
 		shell = Runtime.getRuntime().exec("Rscript " + scriptFile);
 		shell.waitFor();
 
-		// System.out.println("Question: " + qid);
 		BufferedReader reader = null;
 		reader = new BufferedReader(new InputStreamReader(shell.getInputStream()));
 		String line;
 		ArrayList<Integer> ranking = new ArrayList<Integer>();
 
 		while ((line = reader.readLine()) != null) {
-
-			// System.out.println(line);
 			System.out.flush();
 			if (line.contains("The optimal list is:")) {
 				String[] order = reader.readLine().trim().split(" ");
 				for (int i = 0; i < order.length; i++) {
-				//	 System.out.println(order[i]);
 					ranking.add(new Integer(order[i]));
 				}
 			}
@@ -155,25 +148,7 @@ public class GeneticAlgorithm extends RankingAggregation {
 	public static void main(String[] args)
 			throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
 		// TODO Auto-generated method stub
-		System.out.println("COOK tunning");
-		int total =1;
-		double bestNDCg = 0.0;
-		for (double CP = 0.1; CP < 0.61; CP += 0.1) {
-			for (double MP = 0.01; MP < 0.9; MP += 0.01) {
-				System.out.println("Total:"+ total+ "/48 CP: " + CP + " MP: " + MP);
-				GeneticAlgorithm ga = new GeneticAlgorithm(100, 30, CP, MP);
-				ga.run();
-				if (bestNDCg < ga.re.avgNDCG)
-				{
-					System.out.println("*****Best avg avg ndcg: " + ga.re.avgNDCG);
-					System.out.println("*****CP: " + CP + " MP: " + MP);
-					bestNDCg = ga.re.avgNDCG;
-				}
-					
-				total++;
-			}
-		}
-		
+
 	}
 
 }

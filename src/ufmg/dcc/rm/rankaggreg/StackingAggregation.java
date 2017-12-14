@@ -20,6 +20,7 @@ public class StackingAggregation extends RankingAggregation {
 		// TODO Auto-generated constructor stub
 		super();
 		fpc = new FileParserContext(new DataReaderFromMultiView());
+		name = "Stacking";
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class StackingAggregation extends RankingAggregation {
 		for (Integer qid : forum.keySet()) {
 			ArrayList<Integer> ranking = new ArrayList<Integer>();
 			
-			for(Integer aid:forum.get(qid).getRankingGlobalScore().keySet())
+			for(Integer aid:forum.get(qid).getRankingPredictedScore().keySet())
 			{
 				ranking.add(aid);
 			}

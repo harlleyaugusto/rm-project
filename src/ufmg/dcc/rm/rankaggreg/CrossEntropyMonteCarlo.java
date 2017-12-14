@@ -10,11 +10,16 @@ import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.security.auth.login.Configuration;
+
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import ufmg.dcc.rm.experiments.RunExperiment;
+import ufmg.dcc.rm.parse.DataReaderFeature;
 import ufmg.dcc.rm.parse.DataReaderFromView;
 import ufmg.dcc.rm.parse.FileParserContext;
 import ufmg.dcc.rm.qa.Answer;
 import ufmg.dcc.rm.qa.Question;
+import ufmg.dcc.rm.util.conf.ConfigurationFeature;
 
 public class CrossEntropyMonteCarlo extends RankingAggregation {
 
@@ -24,6 +29,7 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 	public CrossEntropyMonteCarlo() {
 		super();
 		fpc = new FileParserContext(new DataReaderFromView());
+		name = "CE";
 	}
 
 	@Override
@@ -37,7 +43,6 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		// TODO Auto-generated method stub
 		boolean first = true;
 		int count = 1;
-		int total = 0;
 		for (Integer qid : forum.keySet()) {
 
 			System.out.println(
@@ -63,17 +68,14 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 
 			}
 
-			result(qid, forum.get(qid).getAnswers().size());
+			rCE(qid, forum.get(qid).getAnswers().size());
 
 			writer.close();
-			total++;
-			/*
-			 * if (total > 10) break;
-			 */
+		
 		}
 	}
 
-	private void result(int qid, int sizeOfList) throws IOException, InterruptedException {
+	private void rCE(int qid, int sizeOfList) throws IOException, InterruptedException {
 
 		String scriptFile = "scriptR/" + qid + ".R";
 		PrintWriter writerScript = new PrintWriter(scriptFile, "UTF-8");
@@ -104,20 +106,16 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 		shell = Runtime.getRuntime().exec("Rscript " + scriptFile);
 		shell.waitFor();
 
-		// System.out.println("Question: " + qid);
 		BufferedReader reader = null;
 		reader = new BufferedReader(new InputStreamReader(shell.getInputStream()));
 		String line;
 		ArrayList<Integer> ranking = new ArrayList<Integer>();
 
 		while ((line = reader.readLine()) != null) {
-
-			System.out.println(line);
 			System.out.flush();
 			if (line.contains("The optimal list is:")) {
 				String[] order = reader.readLine().trim().split(" ");
 				for (int i = 0; i < order.length; i++) {
-					System.out.println(order[i]);
 					ranking.add(new Integer(order[i]));
 				}
 			}
@@ -138,21 +136,29 @@ public class CrossEntropyMonteCarlo extends RankingAggregation {
 	public static void main(String[] args)
 			throws FileNotFoundException, UnsupportedEncodingException, IOException, InterruptedException {
 
-		/*CrossEntropyMonteCarlo CE = new CrossEntropyMonteCarlo();
+		CrossEntropyMonteCarlo CE = new CrossEntropyMonteCarlo();
 
 		CE.run();
-
+		DataReaderFeature.parse(CE);
+		
 		System.out.println("*****************************");
-*/
+		
+		
 		StackingAggregation SA = new StackingAggregation();
 
 		SA.run();
+		
+		DataReaderFeature.parse(SA);
 
+		RunExperiment.compareRankings(SA, CE);
+		
 		System.out.println("*****************************");
 
 		GeneticAlgorithm GA = new GeneticAlgorithm();
 
 		GA.run();
+		
+		DataReaderFeature.parse(GA);
 
 		RunExperiment.compareRankings(SA, GA);
 		

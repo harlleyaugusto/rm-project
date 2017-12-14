@@ -12,22 +12,22 @@ public class Question {
 
 	private HashMap<String, HashMap<Integer, Double>> rankingPerView;
 	private HashMap<Integer, Double> rankingTarget;
-	private HashMap<Integer, Double> rankingGlobalScore;
+	private HashMap<Integer, Double> rankingPredictedScore;
 	private Double[] ndcg;
 
 	/**
 	 * @return the rankingGlobalScore
 	 */
-	public HashMap<Integer, Double> getRankingGlobalScore() {
-		return rankingGlobalScore;
+	public HashMap<Integer, Double> getRankingPredictedScore() {
+		return rankingPredictedScore;
 	}
 
 	/**
 	 * @param rankingGlobalScore
 	 *            the rankingGlobalScore to set
 	 */
-	public void setRankingGlobalScore(HashMap<Integer, Double> rankingGlobalScore) {
-		this.rankingGlobalScore = rankingGlobalScore;
+	public void setRankingPredictedScore(HashMap<Integer, Double> rankingGlobalScore) {
+		this.rankingPredictedScore = rankingGlobalScore;
 	}
 
 	public Question(int id, Answer ans) {
@@ -159,15 +159,15 @@ public class Question {
 
 	public HashMap<Integer, Double> sortingByGlobalScore() {
 
-		rankingGlobalScore = new HashMap<Integer, Double>();
+		rankingPredictedScore = new HashMap<Integer, Double>();
 
 		for (Integer aid : answers.keySet()) {
-			rankingGlobalScore.put(aid, answers.get(aid).getPredictedResultGlobal());
+			rankingPredictedScore.put(aid, answers.get(aid).getPredictedScore());
 		}
 
-		rankingGlobalScore = (HashMap<Integer, Double>) SortUtil.sortByValue(rankingGlobalScore);
+		rankingPredictedScore = (HashMap<Integer, Double>) SortUtil.sortByValue(rankingPredictedScore);
 
-		return rankingGlobalScore;
+		return rankingPredictedScore;
 	}
 
 	public static void sortingAllQuestionsByGlobalScore(HashMap<Integer, Question> questions) {
@@ -192,6 +192,6 @@ public class Question {
 		for (int i = 0; i < ndcg.length; i++)
 			avg += ndcg[i];
 
-		return avg;
+		return avg/ndcg.length;
 	}
 }

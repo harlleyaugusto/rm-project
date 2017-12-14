@@ -5,9 +5,9 @@ public class ConfigurationMultiView {
 
 	public static String path_files = "/home/harlley/Projects/rm-project/data/experiments_results_qa/";
 
-	//public static String[] files_views = { "MV_results_stack.txt", };
+	public static String[] files_views = { "MV_results_stack.txt", };
 
-	public static String[] files_views = { "MV_results_cook.txt", };
+	//public static String[] files_views = { "MV_results_cook.txt", };
 
 	//public static String[] files_views = { "MV_results_english.txt", };
 	
