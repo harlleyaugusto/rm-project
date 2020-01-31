@@ -1,4 +1,4 @@
-package ufmg.dcc.rm.ranking;
+package ufmg.dcc.rm.ranking; 
 
 import ufmg.dcc.rm.parse.*;
 import ufmg.dcc.rm.qa.*;
